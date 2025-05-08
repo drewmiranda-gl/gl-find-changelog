@@ -1,0 +1,11 @@
+github:
+  api-token: 
+  # permissions needed
+  #   Contents            Read-Only
+  #   Issues              Read-Only
+  #   Pull Requests       Read-Only
+  #   
+  owner: Graylog2
+  repos:
+    open: graylog2-server
+    enterprise: graylog-plugin-enterprise

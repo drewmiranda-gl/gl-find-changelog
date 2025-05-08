@@ -1,0 +1,6 @@
+.DS_Store
+src/__pycache__/*
+src/venv/*
+src/web.log
+src/config.yml
+config.yml

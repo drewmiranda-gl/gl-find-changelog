@@ -1,0 +1,17 @@
+services:
+  app:
+    image: drewmiranda/gl-find-changelog:latest
+    container_name: gl_find_changelog
+    restart: unless-stopped
+    environment:
+      LOG_FILE: web.log
+      CONSOLE_LEVEL: INFO
+      LOG_LEVEL: INFO
+      CONFIG_FILE: config.yml
+    volumes:
+      - type: bind
+        source: ./config.yml
+        target: /app/config.yml
+        read_only: true
+    ports:
+      - "89:80/tcp"
