@@ -384,9 +384,7 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
         else:
             raise Exception("Please configure github.owner in config file")
 
-        logger.debug(repo_arg)
         if "repos" in d_config["github"]:
-            logger.debug('if "repos" in')
             if str(repo_arg).lower() == "open":
                 if "open" in d_config["github"]["repos"]:
                     REPO = d_config["github"]["repos"]["open"]
@@ -402,17 +400,11 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
             BRANCH_SHA = query_opt["branch"]
             url = f'https://api.github.com/repos/Graylog2/{REPO}/git/trees/{BRANCH_SHA}?recursive=1'
     
-    logger.debug("".join([
-        "len(url): ", str(len(url))
-    ]))
-
     if not len(url):
         logger.error("NO URL built. Invalid query type.")
         return ""
     else:
-        logger.debug("".join([
-            "GH URL: ", str(url)
-        ]))
+        a=1
 
     # === Headers with Authentication ===
     headers = {
@@ -421,6 +413,11 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
     }
 
     response = requests.get(url, headers=headers)
+    logger.debug("".join([
+        "GH URL: ", str(url)
+        , "\n" , "    ", "Status Code: ", str(response.status_code)
+    ]))
+    
     if response.status_code == 200:
         final_rs = response.json()
         if str(query_type).lower() == "find-pr-in-branch":
@@ -434,6 +431,18 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
         #         "- "
         #         , str(name)
         #     ]))
+    else:
+        logger.error("".join([
+            "GH URL: ", str(url)
+            , "\n" , "    ", "Status Code: ", str(response.status_code)
+            , "\n" , "    ", "Response: ", str(response.text)
+        ]))
+        return {
+            "error": {
+                "code": str(response.status_code)
+                , "text": str(response.text)
+            }
+        }
 
     return ""
 
@@ -442,6 +451,8 @@ def get_gh_branches(repo_arg):
     exp = re.compile(r'^\d+\.\d+$')
     # config_json = json.dumps(d_config, indent=4)
     jsonrs = query_gh_api(repo_arg, "branches", {})
+    if "error" in jsonrs:
+        return json.dumps(jsonrs)
 
     versions_list = []
     d_tmp = {}

@@ -29,13 +29,25 @@ function populate_by_repo(repo_name, pr_arg)
         dataType: "json",
         success: function(data)
         {
-            $.each(data, function(index, item) {
-                var originalText = item['name'];
-                var cleanedText = originalText.replace(/\./g, '') + '-' + repo_name;
-                $('#xhr-pr-rs-' + repo_name).append('<div id=\"rs-' + cleanedText + '\"><h3>Branch: ' + item['name'] + '</h3></div>');
-                load_pr_search_for_branch(repo_name, pr_arg, item['commit']['sha'], 'rs-' + cleanedText)
-            });
-        }
+            
+
+            if ('error' in data) {
+                console.log(data.error)
+                $('#xhr-pr-rs-' + repo_name).append("ERROR");
+
+                $.each(data.error, function(index, item) {
+                    $('#xhr-pr-rs-' + repo_name).append("<br>");
+                    $('#xhr-pr-rs-' + repo_name).append(index + ": " + item);
+                });
+            } else {
+                $.each(data, function(index, item) {
+                    var originalText = item['name'];
+                    var cleanedText = originalText.replace(/\./g, '') + '-' + repo_name;
+                    $('#xhr-pr-rs-' + repo_name).append('<div id=\"rs-' + cleanedText + '\"><h3>Branch: ' + item['name'] + '</h3></div>');
+                    load_pr_search_for_branch(repo_name, pr_arg, item['commit']['sha'], 'rs-' + cleanedText)
+                });
+            }
+        },
     });
 }
 
