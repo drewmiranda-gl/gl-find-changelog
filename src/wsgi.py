@@ -124,6 +124,7 @@ app = Flask(__name__)
 @app.route("/api", methods=['GET'])
 @app.route("/api/find-pr-in-branch", methods=['GET'])
 @app.route("/api/get-branches", methods=['GET'])
+@app.route("/api/get-file", methods=['GET'])
 def main():
     return do_GET()
 
@@ -399,6 +400,12 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
         if "branch" in query_opt:
             BRANCH_SHA = query_opt["branch"]
             url = f'https://api.github.com/repos/Graylog2/{REPO}/git/trees/{BRANCH_SHA}?recursive=1'
+    elif str(query_type).lower() == "file":
+        # GET /repos/{owner}/{repo}/contents/{path}?ref={commit_sha}
+        if "file" in query_opt:
+            GHFILE = query_opt["file"]
+            url = f'https://api.github.com/repos/Graylog2/{GHFILE}'
+        a=1
     
     if not len(url):
         logger.error("NO URL built. Invalid query type.")
@@ -445,6 +452,27 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
         }
 
     return ""
+
+def get_gh_file(file_arg):
+    jsonrs = query_gh_api("", "file", {"file": str(file_arg)})
+    if "content" in jsonrs:
+        s_content = jsonrs["content"]
+        import base64
+
+        # Example base64 string from GitHub
+        base64_content = s_content
+
+        # Remove any line breaks
+        clean_content = base64_content.replace('\n', '').strip()
+
+        # Decode
+        decoded_content = base64.b64decode(clean_content).decode('utf-8')
+        return json.dumps({
+            "decoded_content": decoded_content
+        })
+
+    # return json.dumps(jsonrs)
+    return {}
 
 def get_gh_branches(repo_arg):
 
@@ -540,6 +568,12 @@ def do_GET():
         final_rewritten_page_contents = ""
         if "repo" in d_parsed_args:
             final_rewritten_page_contents = get_gh_branches(d_parsed_args["repo"])
+        return Response(final_rewritten_page_contents, status=200, mimetype="application/json")
+
+    elif str(request.path).startswith("/api/get-file"):
+        final_rewritten_page_contents = ""
+        if "file" in d_parsed_args:
+            final_rewritten_page_contents = get_gh_file(d_parsed_args["file"])
         return Response(final_rewritten_page_contents, status=200, mimetype="application/json")
 
     elif str(request.path).startswith("/api/find-pr-in-branch"):

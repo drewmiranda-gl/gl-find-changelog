@@ -51,6 +51,25 @@ function populate_by_repo(repo_name, pr_arg)
     });
 }
 
+function load_gh_file(file_arg, div_id_arg)
+{
+    // http://localhost:89/api/get-file?file=
+    $.ajax({
+        type: "GET",
+        url: "/api/get-file",
+        data: {file: file_arg},
+        dataType: "json",
+        success: function(data)
+        {
+            if ('decoded_content' in data) {
+                // console.log("Append: " + div_id_arg);
+                // console.log("With: " + data);
+                $('#' + div_id_arg).append("<div class='file-contents'>" + data.decoded_content.replace("\n", "<br>") + "</div>");
+            }
+        }
+    });
+}
+
 function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
 {
     // console.log(branch_sha)
@@ -63,14 +82,32 @@ function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
         {
             $.each(data, function(index, item) {
                 // console.log(item);
+                s_full_gh_file_url = "https://github.com/Graylog2/"
+                    + item.repo
+                    + "/blob/" 
+                    + branch_sha_arg + "/"
+                    + item.file
+                
+                // GET /repos/{owner}/{repo}/contents/{path}?ref={commit_sha}
+                s_get_fule = ""
+                    + item.repo
+                    + "/contents/"
+                    + item.file
+                    + "?ref="
+                    + branch_sha_arg
+                // console.log(s_get_fule);
+                // http://localhost:89/api/get-file?file=
+
+                var originalText = item.file;
+                var cleanedText = originalText.replace(/[\/\.]/g, '')
                 $('#' + div_id_arg).append(
-                    "<div>" 
+                    "<div " 
+                    + 'id="'
+                    + cleanedText
+                    + '"'
+                    + ">" 
                         + '<a href="'
-                            + "https://github.com/Graylog2/"
-                            + item.repo
-                            + "/blob/" 
-                            + branch_sha_arg + "/"
-                            + item.file
+                            + s_full_gh_file_url
                         + '" target="_blank">'
                             + item.repo
                             + "/"
@@ -78,6 +115,7 @@ function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
                         + "</a>"
                     + "</div>"
                 );
+                load_gh_file(s_get_fule, cleanedText);
             });
             // https://github.com/Graylog2/graylog2-server/blob/6.2/changelog/6.2.1/pr-22343.toml
             // $('#' + div_id_arg).append("" + data);

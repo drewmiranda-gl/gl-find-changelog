@@ -3,3 +3,12 @@ div.pr-rs {
     display: block;
     width: 48%;
 }
+
+div.file-contents {
+    white-space: pre-wrap;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    background: #efefef;
+    font-family: monospace;
+}
