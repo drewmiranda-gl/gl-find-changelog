@@ -30,6 +30,11 @@ Modify `config.yml` and save your Github access token using the github.api-token
 
 ## Use Docker Compose to run the container
 
-`docker compose -f DockerCompose.yml up -d --build`
+```sh
+# Pull Latest Image
+docker compose -f DockerCompose.yml pull
+# Start Container, rebuild if there are changes
+docker compose -f DockerCompose.yml up -d --build
+```
 
 Listens on port [TCP] 89 by default and can be reached via your web browser at http://127.0.0.1:89

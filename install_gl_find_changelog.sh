@@ -18,4 +18,7 @@ esac
 
 echo -n "Enter GH api-token: " && tmppw=$(head -1 </dev/stdin | tr -d '\n') && sed ${sed_no_backup[@]} -e "s/  api-token:.*/  api-token: $tmppw/g" config.yml
 
+# Pull Latest Image
+docker compose -f Gl-Find-Changelog-DockerCompose.yml pull
+# Start Container, rebuild if there are changes
 docker compose -f Gl-Find-Changelog-DockerCompose.yml up -d --build
