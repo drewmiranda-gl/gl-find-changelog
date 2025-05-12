@@ -4,12 +4,16 @@
 # # One time only
 # docker buildx create --name multiarch --driver docker-container --use
 # # build AND PUSH
+
+# ======== UNCOMMENT BELOW TO COPY BUILD COMMAND ========
 # docker buildx build \
 # --push \
 # --platform linux/arm64/v8,linux/amd64 \
 # --tag drewmiranda/gl-find-changelog:latest \
-# --tag drewmiranda/gl-find-changelog:v0.1 \
+# --tag drewmiranda/gl-find-changelog:v0.2 \
 # .
+# ======== ======== ======== ======== ======== ========
+
 # 
 # =============================================================================
 # # Single ARCH
