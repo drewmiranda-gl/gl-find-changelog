@@ -521,7 +521,12 @@ def find_pr_in_branch(pr, branch, repo_arg):
                     pr_csv = [pr]
                 
                 for indv_pr in pr_csv:
-                    if str(indv_pr).strip() in str(FILE_PATH):
+                    file_for_searching = "".join([
+                        "-"
+                        , str(indv_pr).strip()
+                        , "."
+                    ])
+                    if file_for_searching in str(FILE_PATH):
                         # logger.debug(file)
                         # URL https://github.com/Graylog2/graylog-plugin-enterprise/blob/a007dbdece780b5f1378ce157e32426170d33502/changelog/6.1.0-rc.1/.gitkeep
                         d = {
