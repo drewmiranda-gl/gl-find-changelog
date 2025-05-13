@@ -4,3 +4,4 @@ src/venv/*
 src/web.log
 src/config.yml
 config.yml
+notes.md
