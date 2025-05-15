@@ -10,7 +10,7 @@
 # --push \
 # --platform linux/arm64/v8,linux/amd64 \
 # --tag drewmiranda/gl-find-changelog:latest \
-# --tag drewmiranda/gl-find-changelog:v0.2 \
+# --tag drewmiranda/gl-find-changelog:v0.3 \
 # .
 # ======== ======== ======== ======== ======== ========
 
