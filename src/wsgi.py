@@ -396,6 +396,12 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
     url = ""
     if str(query_type).lower() == "branches":
         url = f'https://api.github.com/repos/{OWNER}/{REPO}/branches'
+    elif str(query_type).lower() == "get-repo":
+        url = f'https://api.github.com/repos/{OWNER}/{REPO}'
+    elif str(query_type).lower() == "get-branch":
+        if "branch" in query_opt:
+            BRANCH_NAME = query_opt["branch"]
+            url = f'https://api.github.com/repos/{OWNER}/{REPO}/branches/{BRANCH_NAME}'
     elif str(query_type).lower() == "find-pr-in-branch":
         if "branch" in query_opt:
             BRANCH_SHA = query_opt["branch"]
@@ -479,6 +485,8 @@ def get_gh_branches(repo_arg):
     exp = re.compile(r'^\d+\.\d+$')
     # config_json = json.dumps(d_config, indent=4)
     jsonrs = query_gh_api(repo_arg, "branches", {})
+    # logger.debug(json.dumps(jsonrs, indent=4))
+
     if "error" in jsonrs:
         return json.dumps(jsonrs)
 
@@ -496,6 +504,35 @@ def get_gh_branches(repo_arg):
     final_list = []
     for version in new_versions_list:
         final_list.append(d_tmp[version])
+
+    jsonrs_repo = query_gh_api(repo_arg, "get-repo", {})
+    if "default_branch" in jsonrs_repo:
+        jsonrs_branch = query_gh_api(
+            repo_arg
+            , "get-branch"
+            , {
+                "branch": jsonrs_repo["default_branch"]
+            }
+        )
+        logger.debug(json.dumps(jsonrs_branch, indent=4))
+        if (
+            "name" in jsonrs_branch
+            and "commit" in jsonrs_branch
+            and "sha" in jsonrs_branch["commit"]
+            and "url" in jsonrs_branch["commit"]
+            and "protected" in jsonrs_branch
+        ):
+            logger.debug("match this crazy if")
+            d_default_branch = {
+                "name": jsonrs_branch["name"]
+                , "commit": {
+                    "sha": jsonrs_branch["commit"]["sha"]
+                    , "url": jsonrs_branch["commit"]["url"]
+                }
+                , "protected": jsonrs_branch["protected"]
+            }
+            final_list.append(d_default_branch)
+
 
     return json.dumps(final_list)
 
