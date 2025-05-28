@@ -324,8 +324,8 @@ def search_page(search_q: str):
             , "<div>"
                 , str(search_q)
             , "</div>"
-            , "<div id=\"xhr-pr-rs-open\" class=\"pr-rs\"></div>"
-            , "<div id=\"xhr-pr-rs-enterprise\" class=\"pr-rs\"></div>"
+            , "<div id=\"xhr-pr-rs-open\" class=\"pr-rs container-repo\"></div>"
+            , "<div id=\"xhr-pr-rs-enterprise\" class=\"pr-rs container-repo\"></div>"
         , "</body>"
         , "</html>"
     ])
@@ -459,6 +459,36 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
 
     return ""
 
+def parse_link_url_to_gh_issue_or_pr(orig_file_url: str, decoded_content_in: str):
+    orig_file_url_parts = orig_file_url.split("/")
+    repo = orig_file_url_parts[0]
+    text = decoded_content_in
+    base_url = "https://github.com/Graylog2"
+
+    # Replace plain numbers, assuming they refer to default_repo
+    def plain_ref_replacer(match):
+        # pr = match.group(1)
+
+        if re.search(r'([\w\-]+#)(\d+)', match.group(1)):
+            # return match.group(1)
+            url = f"{base_url}/{match.group(2)}/issues/{match.group(3)}"
+        else:
+            url = f"{base_url}/{repo}/issues/{match.group(3)}"
+
+        return "".join([
+                "\""
+            ,'<a href="'
+                , url
+                , '" target="_blank">'
+                    , match.group(1)
+            , "</a>"
+            , "\""
+        ])
+
+    text = re.sub(r'"((?:([\w\-]+)#)?(\d+))"', plain_ref_replacer, text)
+
+    return text
+
 def get_gh_file(file_arg):
     jsonrs = query_gh_api("", "file", {"file": str(file_arg)})
     if "content" in jsonrs:
@@ -473,8 +503,12 @@ def get_gh_file(file_arg):
 
         # Decode
         decoded_content = base64.b64decode(clean_content).decode('utf-8')
+        rich_content = parse_link_url_to_gh_issue_or_pr(file_arg, decoded_content)
+
+
         return json.dumps({
             "decoded_content": decoded_content
+            , "rich_content": rich_content
         })
 
     # return json.dumps(jsonrs)

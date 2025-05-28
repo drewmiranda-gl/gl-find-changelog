@@ -34,7 +34,6 @@ function populate_by_repo(repo_name, pr_arg)
                 $('#xhr-pr-rs-' + repo_name).append("ERROR");
 
                 $.each(data.error, function(index, item) {
-                    $('#xhr-pr-rs-' + repo_name).append("<br>");
                     $('#xhr-pr-rs-' + repo_name).append(index + ": " + item);
                 });
             } else {
@@ -64,10 +63,10 @@ function load_gh_file(file_arg, div_id_arg)
         dataType: "json",
         success: function(data)
         {
-            if ('decoded_content' in data) {
+            if ('rich_content' in data) {
                 // console.log("Append: " + div_id_arg);
                 // console.log("With: " + data);
-                $('#' + div_id_arg).append("<div class='file-contents'>" + data.decoded_content.replace("\n", "<br>") + "</div>");
+                $('#' + div_id_arg).append("<div class='file-contents'>" + data.rich_content.replace("\n", "<br>") + "</div>");
             }
         }
     });
