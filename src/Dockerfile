@@ -10,7 +10,7 @@
 # --push \
 # --platform linux/arm64/v8,linux/amd64 \
 # --tag drewmiranda/gl-find-changelog:latest \
-# --tag drewmiranda/gl-find-changelog:v0.3 \
+# --tag drewmiranda/gl-find-changelog:v0.4 \
 # .
 # ======== ======== ======== ======== ======== ========
 
@@ -37,7 +37,7 @@
 # 
 FROM python:3.11-slim
 
-LABEL version="0.1"
+LABEL version="0.4"
 
 WORKDIR /app
 
