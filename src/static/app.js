@@ -21,7 +21,7 @@ function populate_by_repo(repo_name, pr_arg)
 {
     // $("#xhr-pr-rs-" + repo_name).html("Repo: " + repo_name);
     console.log('#xhr-pr-rs-' + repo_name);
-    $('#xhr-pr-rs-' + repo_name).html("<h2>Repo: " + repo_name + "</h2>");
+    $('#xhr-pr-rs-' + repo_name).html("<h2>Repo: " + repo_name + "</h2><div class=\"loading-gif-" + repo_name + "\"><img src=\"/files/images/loading.gif\"></div>");
     $.ajax({
         type: "GET",
         url: "/api/get-branches",
@@ -29,8 +29,6 @@ function populate_by_repo(repo_name, pr_arg)
         dataType: "json",
         success: function(data)
         {
-            
-
             if ('error' in data) {
                 console.log(data.error)
                 $('#xhr-pr-rs-' + repo_name).append("ERROR");
@@ -40,6 +38,7 @@ function populate_by_repo(repo_name, pr_arg)
                     $('#xhr-pr-rs-' + repo_name).append(index + ": " + item);
                 });
             } else {
+                $('div.loading-gif-' + repo_name).html("");
                 $.each(data, function(index, item) {
                     var originalText = item['name'];
                     var cleanedText = originalText.replace(/\./g, '') + '-' + repo_name;
@@ -73,6 +72,7 @@ function load_gh_file(file_arg, div_id_arg)
 function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
 {
     // console.log(branch_sha)
+    $('#' + div_id_arg).append("<div class=\"loading-gif-" + div_id_arg + "\"><img src=\"/files/images/loading.gif\"></div>");
     $.ajax({
         type: "GET",
         url: "/api/find-pr-in-branch",
@@ -80,6 +80,7 @@ function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
         dataType: "json",
         success: function(data)
         {
+            $('div.loading-gif-' + div_id_arg).html("");
             $.each(data, function(index, item) {
                 // console.log(item);
                 s_full_gh_file_url = "https://github.com/Graylog2/"
