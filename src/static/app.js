@@ -42,7 +42,11 @@ function populate_by_repo(repo_name, pr_arg)
                 $.each(data, function(index, item) {
                     var originalText = item['name'];
                     var cleanedText = originalText.replace(/\./g, '') + '-' + repo_name;
-                    $('#xhr-pr-rs-' + repo_name).append('<div id=\"rs-' + cleanedText + '\"><h3>Branch: ' + item['name'] + '</h3></div>');
+                    $('#xhr-pr-rs-' + repo_name).append('<div id=\"rs-' + cleanedText + '\"><h3>Branch: ' + item['name'] + '</h3>');
+                    if (item['name'].toLowerCase() == "master") {
+                        $('#rs-' + cleanedText).append('<div class="note">NOTE: Unreleased issues/PRs will typically be released in the next minor/major version.</div>');
+                    }
+                    $('#xhr-pr-rs-' + repo_name).append('</div>');
                     load_pr_search_for_branch(repo_name, pr_arg, item['commit']['sha'], 'rs-' + cleanedText)
                 });
             }

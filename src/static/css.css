@@ -8,7 +8,20 @@ div.file-contents {
     white-space: pre-wrap;
     padding: 10px;
     border: 1px solid #ccc;
-    margin: 10px;
+    margin: 10px 0;
     background: #efefef;
     font-family: monospace;
+}
+
+div.note {
+	background: #FFF2A0;
+	padding: 10px;
+	border: 1px solid #b8af73;
+	border-radius: 2px;
+	overflow: auto;
+    margin-bottom: 10px;
+}
+
+div.container-repo {
+    margin: 0 5px;
 }
