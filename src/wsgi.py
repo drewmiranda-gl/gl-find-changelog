@@ -395,7 +395,7 @@ def query_gh_api(repo_arg: str, query_type: str, query_opt: dict):
 
     url = ""
     if str(query_type).lower() == "branches":
-        url = f'https://api.github.com/repos/{OWNER}/{REPO}/branches'
+        url = f'https://api.github.com/repos/{OWNER}/{REPO}/branches?per_page=100'
     elif str(query_type).lower() == "get-repo":
         url = f'https://api.github.com/repos/{OWNER}/{REPO}'
     elif str(query_type).lower() == "get-branch":
