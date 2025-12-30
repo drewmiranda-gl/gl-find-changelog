@@ -37,7 +37,7 @@
 # 
 FROM python:3.11-slim
 
-LABEL version="0.4"
+LABEL version="0.5"
 
 WORKDIR /app
 
