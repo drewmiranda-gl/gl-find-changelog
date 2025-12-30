@@ -534,7 +534,8 @@ def get_gh_branches(repo_arg):
                 versions_list.append(item["name"])
 
     versions_list.sort(key=Version)
-    new_versions_list=versions_list[-4:]
+    # return only 5 most recent branches
+    new_versions_list=versions_list[-5:]
     final_list = []
     for version in new_versions_list:
         final_list.append(d_tmp[version])
