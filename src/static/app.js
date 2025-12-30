@@ -103,7 +103,7 @@ function load_pr_search_for_branch(repo_arg, pr_arg, branch_sha_arg, div_id_arg)
                 // http://localhost:89/api/get-file?file=
 
                 var originalText = item.file;
-                var cleanedText = originalText.replace(/[\/\.]/g, '')
+                var cleanedText = originalText.replace(/[\/\.]/g, '') + "_" + branch_sha_arg
                 $('#' + div_id_arg).append(
                     "<div " 
                     + 'id="'
